@@ -82,6 +82,8 @@ def main():
         help='Upload XAR file to XNAT')
     parser.add_argument('--debug', action='store_true',
         help='Print debugging information')
+    parser.add_argument('--openmp',
+       help='Number of cores for recon-all')
     args = parser.parse_args()
 
     # get start time, current working directory, and utility being called
@@ -221,7 +223,8 @@ def main():
             motioncor=motioncor,
             hires=submillimeter,
             cw256=cw256,
-            custom_tal_atlas=args.custom_tal_atlas
+            custom_tal_atlas=args.custom_tal_atlas,
+            openmp=args.openmp
         )
     
     # run tal_QC_AZS

@@ -29,6 +29,11 @@ def recon_all_362e302e30(input, output, log,  **kwargs):
         '-s', output_basename,
         '-all'
     ]
+    if kwargs.get('openmp', None):
+        cmd.append('-parallel')
+        cmd.extend([
+            '-openmp', kwargs.get('openmp')
+        ])
     if kwargs.get('custom_tal_atlas', None):
         cmd.extend([
             '-custom-tal-atlas', kwargs.get('custom_tal_atlas')
