@@ -47,7 +47,7 @@ def provenance(exe, command, cwd, start, end):
                       start=start,
                       end=end,
                       os=sp.check_output(['uname', '-a']).strip(),
-                      dist=sp.check_output(['cat', '/etc/system-release']).strip(),
+                      dist=sp.check_output(['cat', '/etc/os-release']).strip(),
                       hostname=socket.gethostname(),
                       cwd=cwd,
                       username=gp.getuser(),
