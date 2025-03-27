@@ -47,7 +47,7 @@ class Laterality(object):
     ]
 
     ASEG_REGIONS = [
-        'Thalamus-Proper',
+        'Thalamus',
         'Caudate',
         'Putamen',
         'Pallidum',
