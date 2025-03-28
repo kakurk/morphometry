@@ -34,7 +34,7 @@ from morphometry.xnat.morph3 import Report
 logger = logging.getLogger(__name__)
 
 Version = ap.Namespace(
-    FreeSurfer='6.0.0'
+    FreeSurfer='7.4.1'
 )
 
 STEPS = [
