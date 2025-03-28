@@ -63,7 +63,8 @@ class Snapshotter(object):
             img = Image.open(f)
             draw = ImageDraw.Draw(img)
             font = ImageFont.load_default()
-            _,text_h = draw.textsize(caption, font)
+            bbox = draw.textbbox((0,0), caption, font=font)
+            text_h = bbox[3] - bbox[1]
             img_w,img_h = img.size
             pad = 3
             draw.text((pad, (img_h - text_h) - pad), caption, (255,255,255))
