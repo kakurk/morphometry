@@ -42,6 +42,10 @@ def recon_all_382e322e30(input, output, log,  **kwargs):
             cmd.append('-cm')
         else:
             logger.warning('recon-all does not support passing -cm and -cw256 together')
+    if kwargs.get('openmp', None):
+        cmd.extend([
+            '-parallel', '-openmp', str(kwargs.get('openmp'))
+        ])
     for image in input:
         cmd.extend([
             '-i', str(image)
@@ -90,6 +94,10 @@ def recon_all_372e342e31(input, output, log,  **kwargs):
             cmd.append('-cm')
         else:
             logger.warning('recon-all does not support passing -cm and -cw256 together')
+    if kwargs.get('openmp', None):
+        cmd.extend([
+            '-parallel', '-openmp', str(kwargs.get('openmp'))
+        ])
     for image in input:
         cmd.extend([
             '-i', str(image)
@@ -138,6 +146,10 @@ def recon_all_362e302e30(input, output, log,  **kwargs):
             cmd.append('-cm')
         else:
             logger.warning('recon-all does not support passing -cm and -cw256 together')
+    if kwargs.get('openmp', None):
+        cmd.extend([
+            '-parallel', '-openmp', str(kwargs.get('openmp'))
+        ])
     for image in input:
         cmd.extend([
             '-i', str(image)

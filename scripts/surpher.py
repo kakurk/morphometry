@@ -66,6 +66,8 @@ def main():
         help='Scratch directory')
     parser.add_argument('--custom-tal-atlas',
         help='Custom normalization atlas for FreeSurfer')
+    parser.add_argument('--openmp', type=int, default=None,
+        help='Number of CPU cores to give recon-all via -parallel -openmp')
     parser.add_argument('--steps', nargs='+', default=STEPS,
         help='Steps to execute')
     parser.add_argument('--no-snapshots', action='store_true',
@@ -232,7 +234,8 @@ def main():
             motioncor=motioncor,
             hires=submillimeter,
             cw256=cw256,
-            custom_tal_atlas=args.custom_tal_atlas
+            custom_tal_atlas=args.custom_tal_atlas,
+            openmp=args.openmp
         )
     
     # run tal_QC_AZS
