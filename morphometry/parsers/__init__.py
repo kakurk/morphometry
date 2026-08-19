@@ -75,7 +75,7 @@ def parse_mris_anatomical_stats(s):
 def parse_stats_file(f):
     data = col.defaultdict(col.OrderedDict)
     # read contents of *.stats file
-    with open(f, 'rU') as fo:
+    with open(f, 'r') as fo:
         content = fo.read().split(os.linesep)
     # separate headers and payload
     headers,payload = list(),list()

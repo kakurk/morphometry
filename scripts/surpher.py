@@ -33,9 +33,7 @@ from morphometry.xnat.morph3 import Report
 
 logger = logging.getLogger(__name__)
 
-Version = ap.Namespace(
-    FreeSurfer='6.0.0'
-)
+SUPPORTED_FS_VERSIONS = ['6.0.0', '7.4.1', '8.2.0']
 
 STEPS = [
     'sourcedata',
@@ -82,7 +80,20 @@ def main():
         help='Upload XAR file to XNAT')
     parser.add_argument('--debug', action='store_true',
         help='Print debugging information')
+    parser.add_argument('--fs-version', choices=SUPPORTED_FS_VERSIONS, default=None,
+        help='Override auto-detected FreeSurfer version (default: auto-detect from $FREESURFER_HOME)')
     args = parser.parse_args()
+
+    # determine which FreeSurfer version's command-building logic to use.
+    # auto-detected from $FREESURFER_HOME/build-stamp.txt unless overridden with --fs-version
+    fs_version = args.fs_version or commons.freesurfer_version()
+    if fs_version not in SUPPORTED_FS_VERSIONS:
+        raise commons.VersionError(
+            'unsupported FreeSurfer version {0} (supported: {1})'.format(
+                fs_version, ', '.join(SUPPORTED_FS_VERSIONS)
+            )
+        )
+    Version = ap.Namespace(FreeSurfer=fs_version)
 
     # get start time, current working directory, and utility being called
     start = arrow.now()
@@ -184,7 +195,7 @@ def main():
             source['dim'] = nii.shape
             source['orientation'] = ''.join(nib.aff2axcodes(nii.affine))
             sourcedata.append(source)
-            
+
         # save sourcedata provenance
         logfile = os.path.join(logs_dir, 'sourcedata.yml')
         with open(logfile, 'w') as fo:
@@ -226,16 +237,22 @@ def main():
     
     # run tal_QC_AZS
     if 'tal_qc' in args.steps:
-        logger.info('running tal_qc_azs')
-        tal_avi_log = os.path.join(morph_output_dir, 'mri', 'transforms', 'talairach_avi.log')
-        log_prefix = os.path.join(logs_dir, 'tal_qc_azs')
-        tal_qc_azs = fs.tal_qc_azs.get(Version.FreeSurfer)
-        stdout,_ = tal_qc_azs(tal_avi_log, None, log_prefix)
-        tal_qc = parsers.parse_tal_qc(stdout)
-        tal_qc_json = os.path.join(morph_output_dir, 'stats', 'tal_qc_azs.json')
-        logger.info('saving %s', tal_qc_json)
-        with open(tal_qc_json, 'w') as fo:
-            fo.write(json.dumps(tal_qc, indent=2))
+        if Version.FreeSurfer == '8.2.0':
+            # FreeSurfer 8.2.0 replaced talairach_avi-based registration with
+            # rca-talairach/fs-synthmorph-reg, so mri/transforms/talairach_avi.log
+            # is never produced and tal_QC_AZS has nothing to read.
+            logger.info('skipping tal_qc_azs: talairach_avi.log is not produced by FreeSurfer 8.2.0')
+        else:
+            logger.info('running tal_qc_azs')
+            tal_avi_log = os.path.join(morph_output_dir, 'mri', 'transforms', 'talairach_avi.log')
+            log_prefix = os.path.join(logs_dir, 'tal_qc_azs')
+            tal_qc_azs = fs.tal_qc_azs.get(Version.FreeSurfer)
+            stdout,_ = tal_qc_azs(tal_avi_log, None, log_prefix)
+            tal_qc = parsers.parse_tal_qc(stdout)
+            tal_qc_json = os.path.join(morph_output_dir, 'stats', 'tal_qc_azs.json')
+            logger.info('saving %s', tal_qc_json)
+            with open(tal_qc_json, 'w') as fo:
+                fo.write(json.dumps(tal_qc, indent=2))
    
     # run mris_anatomoical_stats on left and right hemispheres
     if 'stats' in args.steps:

@@ -685,6 +685,7 @@
               <xs:element name="L_Cbral_WMVol" type="xs:decimal" minOccurs="1" maxOccurs="1"/>
               <xs:element name="R_Cbral_WMVol" type="xs:decimal" minOccurs="1" maxOccurs="1"/>
               <xs:element name="ICV" type="xs:decimal" minOccurs="1" maxOccurs="1"/>
+              <xs:element name="STIV" type="xs:decimal" minOccurs="0" maxOccurs="1"/>
               <xs:element name="VentChorVol" type="xs:decimal" minOccurs="1" maxOccurs="1"/>
             </xs:sequence>
           </xs:complexType>

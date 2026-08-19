@@ -77,6 +77,7 @@ aseg:
     brainsegvol: BrainSegVol
     brainsegvolnotvent: BrainSegVolNotVent
     etiv: ICV
+    stiv: STIV
     l_surf_cbral_wm: L_SurfCbral_WM
     r_surf_cbral_wm: R_SurfCbral_WM
     rhcerebralwhitemattervol: R_Cbral_WMVol
@@ -124,6 +125,7 @@ aseg:
     left_pallidum: L_Pal
     left_putamen: L_Put
     left_thalamus_proper: L_ThalProp
+    left_thalamus: L_ThalProp
     left_ventraldc: L_vDC
     left_vessel: L_vessel
     left_wm_hypointensities: L_WM_hypo
@@ -142,6 +144,7 @@ aseg:
     right_pallidum: R_Pal
     right_putamen: R_Put
     right_thalamus_proper: R_ThalProp
+    right_thalamus: R_ThalProp
     right_ventraldc: R_vDC
     right_vessel: R_vessel
     right_wm_hypointensities: R_WM_hypo

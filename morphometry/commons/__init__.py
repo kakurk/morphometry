@@ -84,8 +84,29 @@ def get(module, name, version):
     fname = '%s_%s' % (name, hash.decode('utf-8'))
     try:
         return getattr(module, fname)
-    except ValueError:
+    except AttributeError:
         raise VersionError('could not find %s/%s (%s)' % (name, version, fname))
+
+def freesurfer_version():
+    '''
+    Detect the installed FreeSurfer version by parsing
+    $FREESURFER_HOME/build-stamp.txt
+
+    :returns: FreeSurfer version, e.g. "8.2.0"
+    :rtype: str
+    '''
+    fshome = os.environ.get('FREESURFER_HOME', None)
+    if not fshome:
+        raise VersionError('FREESURFER_HOME is not set')
+    build_stamp = os.path.join(fshome, 'build-stamp.txt')
+    if not os.path.exists(build_stamp):
+        raise VersionError('could not find %s' % build_stamp)
+    with open(build_stamp, 'r') as fo:
+        content = fo.read().strip()
+    match = re.search(r'v?(\d+\.\d+\.\d+)', content)
+    if not match:
+        raise VersionError('could not parse a FreeSurfer version from %s' % build_stamp)
+    return match.group(1)
 
 def dimlen(input, dim):
     input = nib.load(input)
